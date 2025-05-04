@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+echo ECS_CLUSTER=ecslab-cluster >> /etc/ecs/ecs.config
+# Restart ecs agent to enforce instance registration
+while true; do
+  sudo systemctl restart ecs
+  sleep 30
+  if grep -q "Registered container instance with cluster!" /var/log/ecs/ecs-agent.log; then
+    echo "ECS agent registered with cluster"
+    break
+  fi
+done &
